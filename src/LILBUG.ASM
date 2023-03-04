@@ -150,43 +150,43 @@ IN.SWI JMP    M.SWI    ; SWI VECTOR
 ;*   IF TERMINATED BY -2, INTERNAL TABLE NOT CHECKED.
 FCTABL EQU    *
        FCB    4        ; *
-       FCC    /B/
+       FCC    'B'
        FDB    BRKPNT
        FCB    4        ; *
-       FCC    /C/
+       FCC    'C'
        FDB    CALL
        FCB    4        ; *
-       FCC    /D/
+       FCC    'D'
        FDB    DISPLY
        FCB    4        ; *
-       FCC    /G/
+       FCC    'G'
        FDB    GOXQT
        FCB    4        ; *
-       FCC    /L/
+       FCC    'L'
        FDB    LOAD
        FCB    4        ; *
-       FCC    /M/
+       FCC    'M'
        FDB    MEMORY
        FCB    4        ; *
-       FCC    /O/
+       FCC    'O'
        FDB    OFFSET
        FCB    4        ; *
-       FCC    /P/
+       FCC    'P'
        FDB    PUNCH
        FCB    4        ; *
-       FCC    /R/
+       FCC    'R'
        FDB    REGSTR
        FCB    5        ; *
-       FCC    /HI/
+       FCC    'HI'
        FDB    S120
        FCB    5        ; *
-       FCC    /HY/
+       FCC    'HY'
        FDB    HY
        FCB    4        ; *
-       FCC    /T/
+       FCC    'T'
        FDB    TRACE
        FCB    4        ; *
-       FCC    /V/
+       FCC    'V'
        FDB    VERF
        FCB    -2       ; *END OF TABLE
 
@@ -415,7 +415,7 @@ INPTM  LDX    PTM      ; GET PTM ADDRESS
 MAIN   LDS    #STACK
        CLR    OUTSW    ; MAKE SURE INPUT IS ECHOED
        JSR    PCRLF    ; PRINT CR/LF
-       LDAA   #'!
+       LDAA   #'!'
        JSR    OUTCH
        JSR    INPUTA   ; A-F ALPHA
        BMI    MAIN     ; ABORT
@@ -427,10 +427,10 @@ MAIN   LDS    #STACK
        BRA    MAIN08   ; SET UP FOR RTN
 ;* A CONTAINS FIRST INPUT CHARACTER
 MAIN01 LDX    #NEXT    ; CHK FOR TRACE 1
-       CMPA   #'.      ; QUICK TRACE
+       CMPA   #'.'     ; QUICK TRACE
        BEQ    MAIN08
        LDX    #MEMSL   ; CHK FOR /
-       CMPA   #'/      ; QUICK MEM EXAMINE
+       CMPA   #'/'     ; QUICK MEM EXAMINE
        BEQ    MAIN08
 ;*
 ;* READ IN STRING, PUSH STRING UNTO THE
@@ -526,13 +526,13 @@ MAIN08 JSR    0,X      ; GO TO ROUTINE
 ;*   CHAR IN A ON CALL
 ;*   Z BIT SET ON EXIT IFF CHAR WAS
 ;*   TERMINATOR
-TERM   CMPA   #',      ; COMMA?
+TERM   CMPA   #','     ; COMMA?
        BEQ    TERM02
-       CMPA   #'       ; BLANK?
+       CMPA   #' '     ; BLANK?
        BEQ    TERM02
        CMPA   #$D      ; CR?
        BEQ    TERM02
-       CMPA   #'-      ; ALLOW MINUS
+       CMPA   #'-'     ; ALLOW MINUS
 TERM02 RTS             ; RETURN WITH Z BIT
 ;*
 
@@ -594,15 +594,15 @@ INPUTC LDAB   TEMP     ; SET REG B=# HEX CHAR READ
 ;* REG B = 0 CONVERT A-F TO HEX
 ;* REG B < 0 LEAVE A-F ALPHA
 INHEX  JSR    INCHNP   ; (INHEX) MUST BE NEG
-       CMPA   #'0
+       CMPA   #'0'
        BMI    NOTHEX   ; NOT HEX
-       CMPA   #'9
+       CMPA   #'9'
        BLE    IN1HG    ; GOOD
        TSTB            ; A-F NUMBERS?
        BMI    NOTHEX   ; NO
-       CMPA   #'A
+       CMPA   #'A'
        BMI    NOTHEX   ; NOT HEX
-       CMPA   #'F
+       CMPA   #'F'
        BGT    NOTHEX   ; NOT HEX
        SUBA   #7
 IN1HG  ANDA   #$F
@@ -625,7 +625,7 @@ IN1HG  ANDA   #$F
 MEMORY BSR    VALINP
        BLE    MERRTN   ; NOT HEX - ERROR
 MEM01  LDX    TEMPA    ; PRESET FOR ADR/
-       CMPA   #'/      ; / DELIMITER?
+       CMPA   #'/'     ; / DELIMITER?
        BEQ    MEM02
        CMPA   #$20     ; SPACE?
        BNE    MERRTN
@@ -643,7 +643,7 @@ MEM25  STX    PNTR
 MEM03  CMPA   #$D      ; CR?
        BEQ    RETRN    ; END MEM/EX?
 ;*** X = ADR OF CURRENT BYTE
-       CMPA   #',      ; COMMA?
+       CMPA   #','     ; COMMA?
        BNE    MEM33
        INX             ; OPEN NEXT LOC, DO NOT PR
        BRA    MEM25
@@ -660,7 +660,7 @@ MEM06  CMPA   #$5E     ; UA?
        BNE    MEM08
        DEX
        BRA    MEM10
-MEM08  CMPA   #'/      ; SLASH?
+MEM08  CMPA   #'/'     ; SLASH?
        BNE    MERRTN
 MEM10  BSR    PCRLF    ; PR CR/LF
 MEM12  STX    PNTR     ; SAVE NEW PNTR ADR
@@ -858,7 +858,7 @@ PREGS  INC    CT       ; SET FLAG-PRT REG
 ;*************** OUTDA ***************
 ;* PRINT REG A, -
 OUTDA  BSR    ZOUTCH   ; OUTPUT REG A
-       LDAA   #'-      ; DASH
+       LDAA   #'-'     ; DASH
 ZOUTCH JMP    OUTCH
 
 ;********** BRKPNT **********
@@ -869,12 +869,12 @@ ZOUTCH JMP    OUTCH
 ;* B -<ADR> REMOVE BRKPNT
 BRKPNT CMPA   #$D      ; CR?
        BEQ    PRBRK    ; PRINT
-       CMPA   #'-      ; DELETE?
+       CMPA   #'-'     ; DELETE?
        BEQ    DELBRK
        JSR    VALINP
        BMI    GOX2     ; ABORT?
        BNE    BP02     ; HEX?
-       CMPA   #'-      ; DELETE
+       CMPA   #'-'     ; DELETE
        BEQ    DELBRK
        BRA    GOX2     ; ERR IF NOT DEL
 BP02   CMPA   #$D      ; CR
@@ -1329,7 +1329,7 @@ SHOW14 LDAA   0,X
        BLT    SHOW16   ; NON-CHAR
        CMPA   #$61
        BLT    SHOW18
-SHOW16 LDAA   #'.      ; PR . FOR NON-CHAR
+SHOW16 LDAA   #'.'     ; PR . FOR NON-CHAR
 SHOW18 JSR    OUTCH
        INX
        DECB
@@ -1454,12 +1454,12 @@ BSDTA  TSX             ; BULK STORE DATA
        LDD    3,X      ; GET OFFSET
        STD    PNTR
 LOAD3  JSR    INCHNP   ; READ
-LOAD4  CMPA   #'S      ; GET 1ST GOOD REC
+LOAD4  CMPA   #'S'     ; GET 1ST GOOD REC
        BNE    LOAD3
        JSR    INCHNP
-       CMPA   #'9
+       CMPA   #'9'
        BEQ    LOAD20   ; FINI AFTER S9
-       CMPA   #'1      ; DATA REC
+       CMPA   #'1'     ; DATA REC
        BNE    LOAD4    ; NO
        CLR    CKSUM    ; INIT CHECK SUM
        BSR    BYTE     ; GET BYTE CNT
@@ -1582,22 +1582,22 @@ PRTON  FCB    $10,$3A,$10,$39,4 ; TURN ON PRT
 PUNOFF FCB    $14,$13  ; TAPE CONTROL
        FCB    4        ; EOF
 QMARK  FCB    $3F,4    ; PR ?
-LIL    FCC    /LILBUG 1.0/
+LIL    FCC    'LILBUG 1.0'
        FCB    4
-NOCHG  FCC    /NO CHG/
+NOCHG  FCC    'NO CHG'
        FCB    4        ; EOF
-MTAPE  FCB    'S,'1,4
-MEOF   FCC    /S9030000FC/
+MTAPE  FCB    'S','1',4
+MEOF   FCC    'S9030000FC'
        FCB    $D,4
-PRTOP  FCC    /OP-/    ; PRT FOR TRACE LINE
+PRTOP  FCC    'OP-'    ; PRT FOR TRACE LINE
        FCB    4
-ARRAY  FCB    'P,1     ; ARRAY OF REG AND WRD LEN
-       FCB    'X,1
-       FCB    'A,0
-       FCB    'B,0
-       FCB    'C,0
-       FCB    'S,1
-SPACE6 FCC    /      / ; 6 SPACES FOR SHOW HEADER
+ARRAY  FCB    'P',1     ; ARRAY OF REG AND WRD LEN
+       FCB    'X',1
+       FCB    'A',0
+       FCB    'B',0
+       FCB    'C',0
+       FCB    'S',1
+SPACE6 FCC    '      ' ; 6 SPACES FOR SHOW HEADER
        FCB    4
 
 ;*************** VECTORS ***************
