@@ -1,6 +1,6 @@
-       OPT    Z01
-       TTL    6801 DEBUG ; MONITOR *** VER 1.0 ***
-       NAM    LILBUG
+;       OPT    Z01
+;       TTL    6801 DEBUG ; MONITOR *** VER 1.0 ***
+;       NAM    LILBUG
 
 * * * * * * * * * * * * * * * * * * * * * *
 *                                         *
