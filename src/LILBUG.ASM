@@ -295,7 +295,7 @@ N4     DECB            ; DECR NULL CNTR
 
 *************** CION ***************
 * INITIALIZE ON-CHIP SERIAL IO
-CION   LDD    #$1007   ; SET PADDING FOR 300
+CION   LDD    #$0004   ; SET no PADDING, NRZ and E/16 clock
        BSR    S1205    ; SET RMCR
        LDAA   #$0A     ; SET TRCS FOR ON-CHP IO
        STAA   TRCS
@@ -340,7 +340,7 @@ IO     PSHX
 * SET SPEED FOR 120 CPS
 * SET # NULLS TO PAD CHAR
 * SET BITS FOR 1200 BAUD IN RMCR
-S120   LDD    #$4F06
+S120   LDD    #$0004            ; NRX E/16
 S1205  STAA   CHRNL
        STAB   RMCR     ; SET BAUD RATE
        RTS
@@ -348,7 +348,7 @@ S1205  STAA   CHRNL
 *************** HY ***************
 * HIGHER YET - 9600 BAUD ON CRT
 * SET PADDING TO ZERO
-HY     LDD    #$0005   ; ALSO SET RMCR
+HY     LDD    #$0004   ; ALSO SET RMCR
        BRA    S1205
 
 

@@ -295,7 +295,7 @@
      295/    F8C8 :
      296/    F8C8 :                    *************** CION ***************
      297/    F8C8 :                    * INITIALIZE ON-CHIP SERIAL IO
-     298/    F8C8 : CC 10 07           CION   LDD    #$1007   ; SET PADDING FOR 300
+     298/    F8C8 : CC 00 04           CION   LDD    #$0004   ; SET no PADDING, NRZ and E/16 clock
      299/    F8CB : 8D 1F                     BSR    S1205    ; SET RMCR
      300/    F8CD : 86 0A                     LDAA   #$0A     ; SET TRCS FOR ON-CHP IO
      301/    F8CF : 97 11                     STAA   TRCS
@@ -340,7 +340,7 @@
      340/    F8E9 :                    * SET SPEED FOR 120 CPS
      341/    F8E9 :                    * SET # NULLS TO PAD CHAR
      342/    F8E9 :                    * SET BITS FOR 1200 BAUD IN RMCR
-     343/    F8E9 : CC 4F 06           S120   LDD    #$4F06
+     343/    F8E9 : CC 00 04           S120   LDD    #$0004            ; NRX E/16
      344/    F8EC : 97 D5              S1205  STAA   CHRNL
      345/    F8EE : D7 10                     STAB   RMCR     ; SET BAUD RATE
      346/    F8F0 : 39                        RTS
@@ -348,7 +348,7 @@
      348/    F8F1 :                    *************** HY ***************
      349/    F8F1 :                    * HIGHER YET - 9600 BAUD ON CRT
      350/    F8F1 :                    * SET PADDING TO ZERO
-     351/    F8F1 : CC 00 05           HY     LDD    #$0005   ; ALSO SET RMCR
+     351/    F8F1 : CC 00 04           HY     LDD    #$0004   ; ALSO SET RMCR
      352/    F8F4 : 20 F6                     BRA    S1205
      353/    F8F6 :
      354/    F8F6 :
